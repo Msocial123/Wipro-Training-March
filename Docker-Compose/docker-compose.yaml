@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  oracle-web-app:
+    image: muralisocial123/oracle-web-app:latest
+    ports:
+      - 82:80
+    container_name: oracle  
+  wipro-web-app:
+    image: muralisocial123/wipro-web-app:latest
+    ports:
+      - 83:80
+    container_name: wipro 
+  trasncation-web:
+    image: muralisocial123/transcation-bank-app:latest
+    ports:
+      - 3001:3000
+    container_name: transcation
