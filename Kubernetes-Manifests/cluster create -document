@@ -1,0 +1,57 @@
+Cluster creation in AWS
+
+Step-1
+
+•	Launch one linux server
+•	Install kubectl 
+curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+
+curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256
+
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum –check
+
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+kubectl version –client
+
+•	Install eksctl
+# Replace amd64 with armv6, armv7 or arm64
+ (Get-FileHash -Algorithm SHA256 .\eksctl_Windows_amd64.zip).Hash -eq ((Get-Content .\eksctl_checksums.txt) -match 'eksctl_Windows_amd64.zip' -split ' ')[0]
+ ```
+
+#### Using Git Bash: 
+```sh
+# for ARM systems, set ARCH to: `arm64`, `armv6` or `armv7`
+ARCH=amd64
+PLATFORM=windows_$ARCH
+
+curl -sLO "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$PLATFORM.zip"
+
+# (Optional) Verify checksum
+curl -sL "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_checksums.txt" | grep $PLATFORM | sha256sum --check
+
+unzip eksctl_$PLATFORM.zip -d $HOME/bin
+
+rm eksctl_$PLATFORM.zip
+
+•	Install aws cli
+apt install unzip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+
+
+•	Create I am user
+•	Create I am roles master node
+AmazonEKSClusterPolicy
+•	Create iam role for worker node
+AmazonEC2ContainerRegistryReadOnly
+AmazonEKS_CNI_Policy
+AmazonEKSWorkerNodePolicy
+
+•	Attach worker node iam role to your linux server 
+
+Cluster creation command:
+
+eksctl create cluster --name Demo-cluster --region sa-east-1 --zones sa-east-1a,sa-east-1b  --nodegroup-name my-worker-node --node-type t2.medium --nodes 2
